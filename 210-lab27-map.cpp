@@ -1,12 +1,16 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <limits>
 using namespace std;
 
 int execute_choice(map<string, tuple<int,string,string>> &, int);
 void add_village(map<string, tuple<int,string,string>> &);
 void delete_village(map<string, tuple<int,string,string>> &,string);
 void print_village(map<string, tuple<int,string,string>> &);
+void increase_friendship(map<string, tuple<int,string,string>> &, string);
+void decrease_friendship(map<string, tuple<int,string,string>> &, string);
+void search_village(map<string, tuple<int,string,string>> &, string);
 
 int main() {
     // declarations
@@ -70,6 +74,7 @@ int main() {
 int execute_choice(map<string, tuple<int,string,string>> &village, int choice){
     switch(choice){
         case 1: add_village(village);
+                print_village(village);
                 break;
         case 2:{ 
                 string person;
@@ -80,9 +85,33 @@ int execute_choice(map<string, tuple<int,string,string>> &village, int choice){
                 break;
         }
         case 3:{
-                print_village(village);
+                string name;
+                cout << "Which friend do you want to increase points?";
+                getline(cin, name);
+                increase_friendship(village, name);
 
         }
+        case 4:{
+                string name;
+                cout << "Which friend do you want to decrease points?";
+                getline(cin,name);
+                decrease_friendship(village, name);
+                break;
+
+        }
+        case 5:{
+                string name;
+                cout << "Who do you want to find from the village?: ";
+                getline(cin,name);
+                search_village(village,name);
+                break;
+        }
+        case 6:{
+                exit;
+                break;
+        }
+        
+        default: return
     }
 
     return choice;
@@ -98,14 +127,19 @@ void add_village(map<string, tuple<int,string,string>> &village){
     cin.clear();
     cout << "Villager name: ";
     getline(cin, name);
-    cin.ignore();
-    cout << "Firendship level:" ;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "Friendship level:" ;
     cin >> level;
-    cout << endline;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
     cout << "Species: ";
     getline(cin, species);
+
     cout << "Catchphrase: ";
     getline(cin, phrase);
+
 
     village.insert(make_pair(name,make_tuple(level,species,phrase)));
 
@@ -126,10 +160,48 @@ void print_village(map<string, tuple<int,string,string>> &village){
     cout << "\nVillage details :" << endl;
     for (map<string, tuple<int,string, string>>::iterator it = village.begin(); 
                                                it != village.end(); ++it) {
-        cout << it->first << "[ ";
+        cout << it->first << " [";
         cout << get<0> (it->second) << ", ";
         cout << get<1> (it->second) << ", ";
-        cout << get<2> (it->second) << ", ";
+        cout << get<2> (it->second) << "] ";
         cout << endl;
     }
 }
+
+void increase_friendship(map<string, tuple<int,string,string>> &village, string name){
+    // access the map using iterators
+    auto it = village.find(name);
+    if (it != village.end()) {  // the iterator points to beyond the end of the map
+                                       // if searchKey is not found
+        get<0> (it->second) =  get<0> (it->second) + 1;
+    } else
+        cout << endl << name << " not found." << endl;
+}
+
+void decrease_friendship(map<string, tuple<int,string,string>> &village, string name){
+    // access the map using iterators
+    auto it = village.find(name);
+    if (it != village.end()) {  // the iterator points to beyond the end of the map
+                                       // if searchKey is not found
+        get<0> (it->second) =  get<0> (it->second) - 1;
+    } else
+        cout << endl << name << " not found." << endl;
+}
+
+void search_village(map<string, tuple<int,string,string>> &village, string name){
+    // search for an element using .find() to avoid errors
+
+    auto it = village.find(name);
+    if (it != village.end()) {  // the iterator points to beyond the end of the map
+                                       // if searchKey is not found
+        cout << "\nFound " << name << " [";
+        cout << get<0> (it->second) << ", ";
+        cout << get<1> (it->second) << ", ";
+        cout << get<2> (it->second) << "] ";
+        cout << endl;
+    } else
+        cout << endl << name << " not found." << endl;
+    
+}
+
+
