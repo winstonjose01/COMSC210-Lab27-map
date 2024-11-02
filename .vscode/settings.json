@@ -3,6 +3,8 @@
         "tuple": "cpp",
         "iostream": "cpp",
         "limits": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "ostream": "cpp",
+        "typeinfo": "cpp"
     }
 }
